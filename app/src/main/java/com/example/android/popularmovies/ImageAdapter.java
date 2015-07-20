@@ -22,19 +22,13 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int resource, imageViewResourceId;
     private ArrayList<Movie> movies;
-    //private ArrayList<String> urls;
-
-    //private LayoutInflater inflater;
 
     public ImageAdapter(Context c, int resource, int imageViewResourceId, ArrayList<Movie> movies) {
         super();
         mContext = c;
-        //this.movies = new ArrayList<Movie>();
-        //this.urls = new ArrayList<String>();
         this.resource = resource;
         this.imageViewResourceId = imageViewResourceId;
         this.movies = movies;
-        //this.urls = generateUrls(movies);
     }
 
 
@@ -55,7 +49,6 @@ public class ImageAdapter extends BaseAdapter {
 
     public void sortByRating()
     {
-        //ArrayList<Movie>  sortedByRating = new ArrayList<Movie>();
         Collections.sort(movies, new Comparator<Movie>() {
             @Override
             public int compare(Movie p1, Movie p2) {
@@ -64,26 +57,19 @@ public class ImageAdapter extends BaseAdapter {
 
         });
         Log.d("RESUME_BEHAVIOR", "sortByRating ran");
-
-/*
-        double topRating = 0.0;
-        Collection.sort
-
-        for (Movie m:movies) {
-            Double mRating = Double.parseDouble(m.getRating());
-            if (mRating > topRating) {
-                topRating = mRating;
-                sortedByRating.add(0, m);
-
-            }
-            else{
-                sortedByRating.add(m);
-            }
-        }
-        movies = sortedByRating;*/
     }
 
+    public void sortByPopularity()
+    {
+        Collections.sort(movies, new Comparator<Movie>() {
+            @Override
+            public int compare(Movie p1, Movie p2) {
+                return p2.getPopularity().compareTo(p1.getPopularity()); // Descending
+            }
 
+        });
+        Log.d("RESUME_BEHAVIOR", "sortByPopularity ran");
+    }
 
     public long getItemId(int position) {
         return 0;
@@ -102,7 +88,7 @@ public class ImageAdapter extends BaseAdapter {
             //imageView.setAdjustViewBounds(true);
             //imageView.setPadding(0, 0, 0, 0);
             convertView = mInflater.inflate(resource,null);
-            imageView = (ImageView)convertView.findViewById(R.id.grid_item_movie_imageview);
+            imageView = (ImageView)convertView.findViewById(imageViewResourceId);
             imageView.setAdjustViewBounds(true);
 
         } else {

@@ -37,99 +37,39 @@ import java.util.ArrayList;
 public class MainActivityFragment extends Fragment {
 
     private ImageAdapter mMoviesAdapter;
-    //private ArrayList<Movie> movies;
-    //private String sort_by;
     public Sorted sortStatus;
     private enum Sorted {RATING, POPULARITY};
-
-    //private String[] posterUrls;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (sortStatus == Sorted.RATING){
-            String string = "onCreate ran and sortStatus = )" + sortStatus.toString();
-            Log.d("RESUME_BEHAVIOR", string);
-        }
-        else if (sortStatus == Sorted.POPULARITY){
-            String string = "onCreate ran and sortStatus = )" + sortStatus.toString();
-            Log.d("RESUME_BEHAVIOR", string);
-        }else{
-            Log.d("RESUME_BEHAVIOR", "sortStatus is null");
-            //sortStatus = Sorted.RATING;
-            //String string = "onCreate ran and and set sortStatus = )" + sortStatus.toString();
-            //Log.d("RESUME_BEHAVIOR", string);
-        }
-
-
-        // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
 
     }
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(sortStatus != null)
-        {
-            Log.d("RESUME_BEHAVIOR", "onDestroy ran and sortStatus is not null");
-            if (sortStatus == Sorted.RATING)
-            {
-                sortStatus = Sorted.RATING;
-                Log.d("RESUME_BEHAVIOR", "onDestroy ran and sortStatus RATING");
-            }
-            else
-            {
-                //sortStatus = Sorted.POPULARITY;
-                Log.d("RESUME_BEHAVIOR", "onDestroy ran and sortStatus POPULARITY");
-            }
-        }else{
-            Log.d("RESUME_BEHAVIOR", "onDestroy ran and sortStatus is null set sortStatus to POPULARITY");
-            sortStatus = Sorted.POPULARITY;
-        }
-
-
-    }
-    @Override
-    public void onPause() {
-        super.onPause();  // Always call the superclass method first
-        Log.d("RESUME_BEHAVIOR", "onPause is running and sortStatus = " + sortStatus.toString());
-        if (sortStatus == Sorted.RATING)
-        {
-
-            mMoviesAdapter.sortByRating();
-            mMoviesAdapter.notifyDataSetChanged();
-            Log.d("RESUME_BEHAVIOR","Sorted.RATING in onPause() this happened");
-        }
-        else{
-            sortStatus = Sorted.POPULARITY;
-            mMoviesAdapter.notifyDataSetChanged();
-            Log.d("RESUME_BEHAVIOR", "sortStatus was changed to " + sortStatus.toString());
-        }
-
-    }
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-        Log.d("RESUME_BEHAVIOR", "onResume is running and sortStatus is unknown");
-        if (sortStatus == Sorted.RATING)
-        {
-
-            mMoviesAdapter.sortByRating();
-            mMoviesAdapter.notifyDataSetChanged();
-            Log.d("RESUME_BEHAVIOR", "Sorted.RATING in onResume() this happened");
-
+    public void onStart()
+    {
+        super.onStart();
+        /*I can not seem to get the movies to stay sorted when the "up" button is pressed in the detail activity.
+        I'm not sure why but the system "back" button retains the sort order, I tried many things but I give up,
+        hopefully we will learn more about the onStart, onResume, onDestroy, etc. methods*/
+        if (sortStatus == Sorted.RATING){
+            String string = "onStart ran and sortStatus = " + sortStatus.toString();
+            Log.d("RESUME_BEHAVIOR", string);
         }
         else if (sortStatus == Sorted.POPULARITY){
-            //sortStatus = Sorted.POPULARITY;
-            mMoviesAdapter.notifyDataSetChanged();
-            Log.d("RESUME_BEHAVIOR", "Sorted.POPULARITY in onResume() this happened");
-        }else
-        {
-            Log.d("RESUME_BEHAVIOR", "sortStuts is null in onResume() ... set to POPULARITY");
-            //sortStatus=Sorted.POPULARITY;
+            String string = "onStart ran and sortStatus = " + sortStatus.toString();
+            Log.d("RESUME_BEHAVIOR", string);
+        }else{
+            //Log.d("RESUME_BEHAVIOR", "sortStatus is null in onStart()");
+            sortStatus = Sorted.POPULARITY;
+            String string = "onStart ran and and set sortStatus = " + sortStatus.toString();
+            Log.d("RESUME_BEHAVIOR", string);
+            populateMovies();
         }
+
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.moviesfragment, menu);
@@ -141,30 +81,18 @@ public class MainActivityFragment extends Fragment {
 
         switch(id) {
             case R.id.action_sort_by_rating_desc:
-                //sort_by = this.getResources().getString(R.string.sort_by_ranking_desc);
-                //populateMovies();
                 mMoviesAdapter.sortByRating();
                 mMoviesAdapter.notifyDataSetChanged();
-                Log.d("RESUME_BEHAVIOR", "sortStatus (before change): " + sortStatus.toString());
                 sortStatus = Sorted.RATING;
-                Log.d("RESUME_BEHAVIOR", "sortStatus = " + sortStatus.toString());
+                //Log.d("RESUME_BEHAVIOR", "sortStatus = " + sortStatus.toString());
 
 
                 break;
             case R.id.action_sort_by_popularity_desc:
-                //sort_by = this.getResources().getString(R.string.sort_by_popularity_desc);
-                populateMovies();
-                Log.d("RESUME_BEHAVIOR", "sortStatus (before change): " + sortStatus.toString());
+                mMoviesAdapter.sortByPopularity();
+                mMoviesAdapter.notifyDataSetChanged();
                 sortStatus=Sorted.POPULARITY;
-                Log.d("RESUME_BEHAVIOR", "sortStatus = " + sortStatus.toString());
-                break;
-            case android.R.id.home:
-                if (sortStatus == Sorted.RATING)
-                {
-                    mMoviesAdapter.sortByRating();
-                    mMoviesAdapter.notifyDataSetChanged();
-                    Log.d("RESUME_BEHAVIOR","pause this happened");
-                }
+                //Log.d("RESUME_BEHAVIOR", "sortStatus = " + sortStatus.toString());
                 break;
             default:
                 break;
@@ -198,7 +126,7 @@ public class MainActivityFragment extends Fragment {
                 movieInfo.add(movie.getRelease());
                 movieInfo.add(movie.getBackdrop());
 
-                Toast.makeText(getActivity(),  movieInfo.get(1), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), movieInfo.get(1), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), DetailActivity.class).putStringArrayListExtra(Intent.EXTRA_TEXT, movieInfo);
                 startActivity(intent);
             }
@@ -210,7 +138,7 @@ public class MainActivityFragment extends Fragment {
     }
 
 
-//update the Image adapter according to the movies found based on the sort_by string passed in
+    //update the Image adapter according to the movies found from AsyncTask
     private void populateMovies(){
         FetchMoviesInfoTask fmit = new FetchMoviesInfoTask();
         fmit.execute();
@@ -218,25 +146,8 @@ public class MainActivityFragment extends Fragment {
 
     }
 
-    /*public Movie getMovie(String id)
-    {
-        for (Movie m : movies)
-        {
-            if (id.equals(m.getId()))
-            {
-                return m;
-            }
-        }
-        return null;
-    }*/
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        populateMovies();
 
-    }
 
     public class FetchMoviesInfoTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
@@ -262,10 +173,8 @@ public class MainActivityFragment extends Fragment {
             JSONArray moviesArray = moviesJson.getJSONArray(TMDB_RESULTS);
             Log.d(LOG_TAG, "movies Array " + moviesArray.toString());
 
-            //String[] posterUrls = new String[moviesArray.length()];
             ArrayList<Movie> movies = new ArrayList<Movie>();
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            //String unitType = sharedPrefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric));
             for(int i = 0; i < moviesArray.length(); i++) {
 
                 // For now, using the format "Day, description, hi/low"
@@ -287,7 +196,6 @@ public class MainActivityFragment extends Fragment {
 
                 //Create move from JSON data
                 Movie movie = new Movie(id, title, description, poster, popularity, rating, release, backdrop);
-                //posterUrls[i] =  poster;
                 Log.v(LOG_TAG, "Created Movie (id = " + id + " title = " + title + ")");
 
                 //add movie to movies
@@ -316,7 +224,7 @@ public class MainActivityFragment extends Fragment {
 
             try {
                 // Construct the URL for the query
-                //URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=42b1e5baac9dc17b1df2bc072e1c01ca");
+                //URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=dffkfgkjgjlkjhl");
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
                 final String SORT_BY_PARAM = "sort_by";
                 final String API_KEY_PARAM = "api_key";
@@ -360,7 +268,7 @@ public class MainActivityFragment extends Fragment {
                 Log.v(LOG_TAG, "Movies JSON String: " + moviesJsonStr);
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the movie data, there's no point in attemping
                 // to parse it.
                 return null;
             } finally {
@@ -401,19 +309,7 @@ public class MainActivityFragment extends Fragment {
                     mMoviesAdapter.addMovie(movie);
                     mMoviesAdapter.notifyDataSetChanged();
                 }
-
-
-                if (sortStatus == Sorted.RATING)
-                {
-                    mMoviesAdapter.sortByRating();
-                    mMoviesAdapter.notifyDataSetChanged();
-                }else
-                {
-                    sortStatus = Sorted.POPULARITY;
-                    mMoviesAdapter.notifyDataSetChanged();
-                }
-                String string = "onPostExecute ran and sortStatus = " + sortStatus.toString();
-                Log.d("RESUME_BEHAVIOR", string);
+                Log.d("RESUME_BEHAVIOR", "onPostExecute ran");
 
 
             }

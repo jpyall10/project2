@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class DetailActivityFragment extends Fragment {
 
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
@@ -37,7 +34,7 @@ public class DetailActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-            //String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
+
             movieInfo = intent.getStringArrayListExtra(Intent.EXTRA_TEXT);
             id=movieInfo.get(0);
             title=movieInfo.get(1);
@@ -47,7 +44,7 @@ public class DetailActivityFragment extends Fragment {
             rating=movieInfo.get(5);
             releaseDate=movieInfo.get(6);
             backdrop=movieInfo.get(7);
-            //movie = new Movie();
+
 
 
 
@@ -64,21 +61,5 @@ public class DetailActivityFragment extends Fragment {
 
         return rootView;
     }
-
-
-    /*public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.detailfragment, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.action_share);
-
-        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-
-        if (mShareActionProvider != null){
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
-        } else {
-            Log.d(LOG_TAG, "Share Action Provider is null");
-        }
-    }
-*/
 
 }
