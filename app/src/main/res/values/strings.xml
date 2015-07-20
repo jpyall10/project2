@@ -1,0 +1,25 @@
+<resources>
+
+
+
+    <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="pref_sort_by_key">sort_by</string>
+    <string name="pref_sort_by_default_value">popularity.desc</string>
+    <string name="title_activity_detail">Movie Info</string>
+
+
+    <string name="sort_by_popularity_desc">popularity.desc</string>
+    <string name="sort_by_popularity_asc">popularity.asc</string>
+    <string name="sort_by_release_asc">primary_release_date.asc</string>
+    <string name="sort_by_release_desc">primary_release_date.desc</string>
+    <string name="sort_by_title_asc">original_title.asc</string>
+    <string name="sort_by_title_desc">original_title.desc</string>
+    <string name="sort_by_ranking_asc">vote_average.asc</string>
+    <string name="sort_by_ranking_desc">vote_average.desc</string>
+
+
+
+
+</resources>
