@@ -95,8 +95,10 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        String poster_url = movies.get(position).getPoster_url();
-        Picasso.with(mContext).load(poster_url).into(imageView);
+        if (movies != null && movies.size() > 0) {
+            String poster_url = movies.get(position).getPoster_url();
+            Picasso.with(mContext).load(poster_url).into(imageView);
+        }
         return imageView;
 
     }

@@ -1,11 +1,13 @@
 package com.example.android.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 /**
  * Created by jonathanporter on 7/14/15.
  */
-public class Movie {
+public class Movie implements Parcelable {
 
     private final String LOG_TAG = "MOVIE_CLASS";
 
@@ -97,5 +99,23 @@ public class Movie {
 
     public String toString(){
         return id + " " + title + " " + description + " " + popularity + " " + rating + " " + release + " " + backdrop;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(poster_url);
+        dest.writeString(popularity);
+        dest.writeString(rating);
+        dest.writeString(release);
+        dest.writeString(backdrop);
+
     }
 }

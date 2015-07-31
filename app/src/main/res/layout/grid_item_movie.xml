@@ -4,4 +4,4 @@
     android:layout_height="wrap_content"
     android:src="@drawable/placeholder"
     android:id="@+id/grid_item_movie_imageview"
-    />
+/>

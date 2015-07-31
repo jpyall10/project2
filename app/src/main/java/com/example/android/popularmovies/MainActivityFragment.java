@@ -39,7 +39,9 @@ public class MainActivityFragment extends Fragment {
     private ImageAdapter mMoviesAdapter;
     public Sorted sortStatus;
     private enum Sorted {RATING, POPULARITY};
+    ArrayList<Movie> listOfMovies;
 
+    private final String MOVIE_KEY = "movieKey";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,26 +55,19 @@ public class MainActivityFragment extends Fragment {
         /*I can not seem to get the movies to stay sorted when the "up" button is pressed in the detail activity.
         I'm not sure why but the system "back" button retains the sort order, I tried many things but I give up,
         hopefully we will learn more about the onStart, onResume, onDestroy, etc. methods*/
-        if (sortStatus == Sorted.RATING){
-            String string = "onStart ran and sortStatus = " + sortStatus.toString();
-            Log.d("RESUME_BEHAVIOR", string);
-        }
-        else if (sortStatus == Sorted.POPULARITY){
-            String string = "onStart ran and sortStatus = " + sortStatus.toString();
-            Log.d("RESUME_BEHAVIOR", string);
-        }else{
-            //Log.d("RESUME_BEHAVIOR", "sortStatus is null in onStart()");
-            sortStatus = Sorted.POPULARITY;
-            String string = "onStart ran and and set sortStatus = " + sortStatus.toString();
-            Log.d("RESUME_BEHAVIOR", string);
-            populateMovies();
-        }
+
 
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.moviesfragment, menu);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MOVIE_KEY, listOfMovies);
     }
 
     @Override
@@ -99,12 +94,29 @@ public class MainActivityFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        if (savedInstanceState != null)
+        {
+            listOfMovies = (ArrayList<Movie>)savedInstanceState.get(MOVIE_KEY);
+            mMoviesAdapter = new ImageAdapter(this.getActivity(), R.layout.grid_item_movie, R.id.grid_item_movie_imageview, listOfMovies);
+            Log.d("RESUME_BEHAVIOR", "there is a saved state");
+        }
+        else
+        {
+            populateMovies();
+            Log.d("RESUME_BEHAVIOR", "populateMovies ran");
+            mMoviesAdapter = new ImageAdapter(this.getActivity(), R.layout.grid_item_movie, R.id.grid_item_movie_imageview, new ArrayList<Movie>());
 
-        mMoviesAdapter = new ImageAdapter(this.getActivity(), R.layout.grid_item_movie, R.id.grid_item_movie_imageview, new ArrayList<Movie>());
+
+        }
+
+
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movies);
@@ -149,7 +161,7 @@ public class MainActivityFragment extends Fragment {
 
 
 
-    public class FetchMoviesInfoTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+    public class FetchMoviesInfoTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
 
 
 
@@ -204,13 +216,13 @@ public class MainActivityFragment extends Fragment {
             }
 
             for (Movie m : movies) {
-                Log.v(LOG_TAG, "Movies entry url: " + m.toString());
+                Log.v(LOG_TAG, "Movies entry: " + m.toString());
             }
             return movies;
 
         }
 
-        protected ArrayList<Movie> doInBackground(String... params) {
+        protected ArrayList<Movie> doInBackground(Void... params) {
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -219,7 +231,7 @@ public class MainActivityFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String moviesJsonStr = null;
-            String apiKey = "PUT YOUR API HERE";
+            String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
             String sortBy = "popularity.desc";
 
             try {
@@ -285,7 +297,22 @@ public class MainActivityFragment extends Fragment {
             }
             try
             {
-                return getMoviesInfoFromJson(moviesJsonStr);
+                if (listOfMovies != null)
+                {
+                    Log.d("RESUME_BEHAVIOR", "list of movies is not null");
+                    return listOfMovies;
+
+                }
+                else
+                {
+                    listOfMovies = getMoviesInfoFromJson(moviesJsonStr);
+                    Log.d("RESUME_BEHAVIOR", "list of movies was null");
+                    return listOfMovies;
+
+
+                }
+                //return getMoviesInfoFromJson(moviesJsonStr);
+
             }catch (JSONException e)
             {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -297,7 +324,7 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Movie> movies) {
             super.onPostExecute(movies);
-            if (movies.size() > 0)
+            if (movies != null && movies.size() > 0)
             {
                 Log.d(LOG_TAG, "Movies Array is bigger than 0");
                 mMoviesAdapter.clear();
@@ -315,5 +342,6 @@ public class MainActivityFragment extends Fragment {
             }
         }
     }
-
 }
+
+
