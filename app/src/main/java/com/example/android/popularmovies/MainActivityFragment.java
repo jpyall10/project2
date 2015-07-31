@@ -231,7 +231,7 @@ public class MainActivityFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String moviesJsonStr = null;
-            String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
+            String apiKey = "PUT API KEY HERE";
             String sortBy = "popularity.desc";
 
             try {
