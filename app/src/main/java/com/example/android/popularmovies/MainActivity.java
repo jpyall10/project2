@@ -1,19 +1,44 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements MoviesFragment.Callback{
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(findViewById(R.id.movie_detail_container) != null) {
+            Log.d(LOG_TAG, "Main Activity onCreate ... table UI");
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        }else{
+            mTwoPane = false;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_movies, new MoviesFragment(), null)
+                        .commit();
+            }
+        }
+
+            //        Stetho.initialize(
+//                Stetho.newInitializerBuilder(this).enableDumpapp(Stetho)
+//        )
+
     }
 
 
@@ -28,5 +53,43 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MoviesFragment mf = (MoviesFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_movies);
+//        if (null != mf) {
+//            mf.onStatusChanged();
+//        }
+//            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+//            if (null != df) {
+//                df.onLocationChanged(location);
+//            }
+//            mLocation = location;
+//        }
+    }
+
+    @Override
+    public void onItemSelected(Uri movieUri) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, movieUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(movieUri);
+            startActivity(intent);
+        }
+
     }
 }
