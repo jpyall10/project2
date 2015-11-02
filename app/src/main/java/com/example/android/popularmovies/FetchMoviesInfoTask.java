@@ -209,7 +209,7 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
         // Will contain the raw JSON response as a string.
         String moviesJsonStr = null;
 
-        String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
+        String apiKey = "Put Key Here";
         String sortBy = "popularity.desc";
 
         try {
