@@ -2,11 +2,14 @@ package com.example.android.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class DetailActivity extends ActionBarActivity {
+
+    private final String LOG_TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +21,13 @@ public class DetailActivity extends ActionBarActivity {
 
             Bundle arguments = new Bundle();
             arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
-
+            String uriFromIntent = getIntent().getData().toString();
+            Log.d(LOG_TAG, "uri from intent is " + uriFromIntent);
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.movie_detail_container, fragment)
+                    .add(R.id.fragment_movies, fragment)
                     .commit();
         }
     }

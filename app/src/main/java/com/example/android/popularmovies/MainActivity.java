@@ -19,20 +19,21 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(findViewById(R.id.movie_detail_container) != null) {
-            Log.d(LOG_TAG, "Main Activity onCreate ... table UI");
+            Log.d(LOG_TAG, "Main Activity onCreate ... tablet UI");
             mTwoPane = true;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
                         .commit();
             }
-        }else{
+        }
+        else{
             mTwoPane = false;
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_movies, new MoviesFragment(), null)
-                        .commit();
-            }
+//            if (savedInstanceState == null) {
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_movies, new MoviesFragment(), null)
+//                        .commit();
+//            }
         }
 
             //        Stetho.initialize(
@@ -58,15 +59,14 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, "onResume in MainActivity ran");
 //        MoviesFragment mf = (MoviesFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_movies);
 //        if (null != mf) {
 //            mf.onStatusChanged();
 //        }
-//            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-//            if (null != df) {
-//                df.onLocationChanged(location);
-//            }
-//            mLocation = location;
+//        DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+//        if (null != df) {
+//            df.onStatusChanged();
 //        }
     }
 
@@ -86,6 +86,7 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
                     .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
+            Log.d(LOG_TAG, "Intent ran in onItemSelected");
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(movieUri);
             startActivity(intent);

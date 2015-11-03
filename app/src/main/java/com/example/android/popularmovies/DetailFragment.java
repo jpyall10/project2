@@ -25,11 +25,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
     private Cursor mDetailCursor;
-    private View mRootView;
     private int mPosition;
-    private TextView mUriText;
     private Uri mUri;
-    private static final int MOVIES_LOADER_ID = 0;
+    private static final int DETAILS_LOADER_ID = 0;
     static final String DETAIL_URI = "URI";
 
     //member variable views in detail activity
@@ -76,6 +74,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onCreate(savedInstanceState);
 
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(DETAILS_LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,7 +100,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mFavoritesButton = (Button)rootView.findViewById(R.id.detail_favorites_button);
 
         Bundle args = this.getArguments();
-        getLoaderManager().initLoader(MOVIES_LOADER_ID, args, DetailFragment.this);
+        getLoaderManager().initLoader(DETAILS_LOADER_ID, args, DetailFragment.this);
 
         return rootView;
     }
@@ -110,14 +115,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 //        }
 //    }
 
+    void onStatusChanged( ) {
+        getLoaderManager().restartLoader(DETAILS_LOADER_ID, null, this);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(LOG_TAG, "onCreateLoader ran in DetailFragment");
         String selection = null;
         String[] selectionArgs = null;
         if (args != null) {
             selection = MoviesContract.MoviesEntry._ID;
             selectionArgs = new String[]{String.valueOf(mPosition)};
         }
+
+//        Intent intent = getActivity().getIntent();
+//        if(intent == null || intent.getData()==null){
+//            return null;
+//        }
         // Now create and return a CursorLoader that will take care of
         // creating a Cursor for the data being displayed.
         return new CursorLoader(
@@ -137,6 +152,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        Log.d(LOG_TAG, "onLoadFinished Ran");
 
         mDetailCursor = data;
         mDetailCursor.moveToFirst();
@@ -273,11 +290,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 ////        return shareIntent;
 ////    }
 //
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-//        super.onActivityCreated(savedInstanceState);
-//    }
+
 //
 //
 

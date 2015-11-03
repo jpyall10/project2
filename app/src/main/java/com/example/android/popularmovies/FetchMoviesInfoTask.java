@@ -209,7 +209,7 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
         // Will contain the raw JSON response as a string.
         String moviesJsonStr = null;
 
-        String apiKey = "Put Key Here";
+        String apiKey = "put api key here";
         String sortBy = "popularity.desc";
 
         try {
@@ -254,8 +254,9 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            getMoviesInfoFromJson(moviesJsonStr);
+
             Log.v(LOG_TAG, "Movies JSON String: " + moviesJsonStr);
+            getMoviesInfoFromJson(moviesJsonStr);
         } catch (IOException e) {
             Log.e("PlaceholderFragment", "Error ", e);
             // If the code didn't successfully get the movie data, there's no point in attemping

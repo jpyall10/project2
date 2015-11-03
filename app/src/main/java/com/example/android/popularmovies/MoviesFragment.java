@@ -77,15 +77,16 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Cursor c =
-                getActivity().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                        new String[]{MoviesContract.MoviesEntry._ID},
-                        null,
-                        null,
-                        null);
-        if (c.getCount() == 0){
-            populateMovies();
-        }
+//        Cursor c =
+//                getActivity().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+//                        new String[]{MoviesContract.MoviesEntry._ID},
+//                        null,
+//                        null,
+//                        null);
+//        if (c.getCount() == 0){
+//            populateMovies();
+//        }
+        populateMovies();
         getLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -116,26 +117,21 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Movie movie = (Movie) mMoviesAdapter.getItem(position);
-//                ArrayList<String> movieInfo = new ArrayList<String>();
-//                movieInfo.add(movie.getId());
-//                movieInfo.add(movie.getTitle());
-//                movieInfo.add(movie.getDescription());
-//                movieInfo.add(movie.getPoster_url());
-//                movieInfo.add(movie.getPopularity());
-//                movieInfo.add(movie.getRating());
-//                movieInfo.add(movie.getRelease());
-//                movieInfo.add(movie.getBackdrop());
-                int uriId = position + 1;
-                Uri uri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, uriId);
-                //Toast.makeText(getActivity(), movieInfo.get(1), Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(getActivity(), DetailActivity.class).putStringArrayListExtra(Intent.EXTRA_TEXT, movieInfo);
-                //startActivity(intent);
+//                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+//                if (cursor !=null) {
+                  int uriId = position+1;
+                  Uri uri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, uriId);
+
+                    //Uri uri = MoviesContract.MoviesEntry.buildMoviesUri(uriId);
+                    Log.d(LOG_TAG, "uri after click is " + uri);
+                    //((Callback) getActivity())
+                    //        .onItemSelected(uri);
                 DetailFragment detailFragment = DetailFragment.newInstance(uriId, uri);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_movies, detailFragment)
                         .addToBackStack(null).commit();
-            }
+                }
+            //}
         });
 
 //        if (savedInstanceState != null) {
