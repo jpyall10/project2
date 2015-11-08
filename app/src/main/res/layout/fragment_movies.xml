@@ -6,7 +6,7 @@
     tools:context="com.example.android.popularmovies.MoviesFragment">
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/grid_view_movies"
         android:columnWidth="150dp"
         android:numColumns="auto_fit"

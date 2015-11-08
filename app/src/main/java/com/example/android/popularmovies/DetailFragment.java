@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -39,6 +40,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mId;
     private TextView mUserRating;
     private Button mFavoritesButton;
+    private ImageView mTrailerView1, mTrailerView2, mTrailerView3, mTrailerView4;
+
+    private static final String YOUTUBE_IMAGE_URL_PREFIX = "http://img.youtube.com/vi/";
+    private static final String YOUTUBE_IMAGE_URL_SUFFIX = "/0.jpg";
 
     private final String LOG_TAG = this.getClass().getSimpleName();
 
@@ -52,7 +57,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MoviesContract.MoviesEntry.COLUMN_POPULARITY,
             MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
             MoviesContract.MoviesEntry.COLUMN_BACKDROP,
-            MoviesContract.MoviesEntry.COLUMN_FAVORITES
+            MoviesContract.MoviesEntry.COLUMN_FAVORITES,
+            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1,
+            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2,
+            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3,
+            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4
     };
 
     public static DetailFragment newInstance(int position, Uri uri) {
@@ -84,10 +93,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Bundle arguments = getArguments();
-//        if (arguments != null) {
-//            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
-//        }
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mBackdrop = (ImageView) rootView.findViewById(R.id.detail_movie_backdrop);
@@ -98,6 +107,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mId = (TextView) rootView.findViewById(R.id.detail_movie_id);
         mUserRating = (TextView) rootView.findViewById(R.id.detail_movie_rating);
         mFavoritesButton = (Button)rootView.findViewById(R.id.detail_favorites_button);
+        mTrailerView1 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL1);
+        mTrailerView2 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL2);
+        mTrailerView3 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL3);
+        mTrailerView4 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL4);
+
 
         Bundle args = this.getArguments();
         getLoaderManager().initLoader(DETAILS_LOADER_ID, args, DetailFragment.this);
@@ -122,27 +136,31 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.d(LOG_TAG, "onCreateLoader ran in DetailFragment");
-        String selection = null;
-        String[] selectionArgs = null;
-        if (args != null) {
-            selection = MoviesContract.MoviesEntry._ID;
-            selectionArgs = new String[]{String.valueOf(mPosition)};
-        }
-
+//        String selection = null;
+//        String[] selectionArgs = null;
+//        if (args != null) {
+//            selection = MoviesContract.MoviesEntry._ID;
+//            selectionArgs = new String[]{String.valueOf(mPosition)};
+//        }
+//
 //        Intent intent = getActivity().getIntent();
 //        if(intent == null || intent.getData()==null){
 //            return null;
 //        }
         // Now create and return a CursorLoader that will take care of
         // creating a Cursor for the data being displayed.
-        return new CursorLoader(
-                getActivity(),
-                mUri,
-                DETAIL_COLUMNS,
-                selection,
-                selectionArgs,
-                null
-        );
+        if(mUri !=null)
+        {
+            return new CursorLoader(
+                    getActivity(),
+                    mUri,
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+        }
+        return null;
     }
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -154,200 +172,126 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         Log.d(LOG_TAG, "onLoadFinished Ran");
+        try {
 
-        mDetailCursor = data;
-        mDetailCursor.moveToFirst();
-        DatabaseUtils.dumpCursor(data);
-        String poster_url = mDetailCursor.getString(MoviesFragment.COL_MOVIE_POSTER_PATH);
-        Picasso.with(getActivity()).load(poster_url).into(mPoster);
+            String trailerKey1, trailerKey2, trailerKey3, trailerKey4, thumbUrl1, thumbUrl2, thumbUrl3, thumbUrl4;
+            int COL_MOVIE_TRAILER_URL1, COL_MOVIE_TRAILER_URL2, COL_MOVIE_TRAILER_URL3, COL_MOVIE_TRAILER_URL4;
+            mDetailCursor = data;
+            mDetailCursor.moveToFirst();
+            DatabaseUtils.dumpCursor(data);
+            String poster_url = mDetailCursor.getString(MoviesFragment.COL_MOVIE_POSTER_PATH);
+            Picasso.with(getActivity()).load(poster_url).into(mPoster);
 
-        String backdrop_url = mDetailCursor.getString(MoviesFragment.COL_MOVIE_BACKDROP);
-        Picasso.with(getActivity()).load(backdrop_url).into(mBackdrop);
+            String backdrop_url = mDetailCursor.getString(MoviesFragment.COL_MOVIE_BACKDROP);
+            Picasso.with(getActivity()).load(backdrop_url).into(mBackdrop);
 
-        String title = mDetailCursor.getString(MoviesFragment.COL_MOVIE_TITLE);
-        String release = mDetailCursor.getString(MoviesFragment.COL_MOVIE_RELEASE_DATE);
-        final String id = mDetailCursor.getString(MoviesFragment.COL_MOVIE_ID);
-        String desc = mDetailCursor.getString(MoviesFragment.COL_MOVIE_DESC);
-        String user = mDetailCursor.getString(MoviesFragment.COL_MOVIE_USER_RATING);
+            String title = mDetailCursor.getString(MoviesFragment.COL_MOVIE_TITLE);
+            String release = mDetailCursor.getString(MoviesFragment.COL_MOVIE_RELEASE_DATE);
+            final String id = mDetailCursor.getString(MoviesFragment.COL_MOVIE_ID);
+            String desc = mDetailCursor.getString(MoviesFragment.COL_MOVIE_DESC);
+            String user = mDetailCursor.getString(MoviesFragment.COL_MOVIE_USER_RATING);
 
-        mTitle.setText(title);
-        mReleaseDate.setText(release);
-        mId.setText(id);
-        mDescription.setText(desc);
-        mUserRating.setText(user);
+            //Log.d(LOG_TAG, "trailerKey = " + thumbUrl);
 
-        mFavoritesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int rows;
-                String favorites = mDetailCursor.getString(MoviesFragment.COL_MOVIE_FAVORITES);
-                ContentValues cv = new ContentValues();
-                if(favorites.equals("false")) {
 
-                    cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "true");
-                    rows = getActivity().getContentResolver().update(mUri,cv, MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",new String[]{id});
-                    Log.d(LOG_TAG, "rows update " + rows);
-                    mFavoritesButton.setText("Remove From Favorites");
-                }else
-                {
-                    cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "false");
-                    rows = getActivity().getContentResolver().update(mUri,cv, MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",new String[]{id});
-                    Log.d(LOG_TAG, "rows update " + rows);
-                    mFavoritesButton.setText("Add to Favorites");
+            mTitle.setText(title);
+            mReleaseDate.setText(release);
+            mId.setText(id);
+            mDescription.setText(desc);
+            mUserRating.setText(user);
+
+            COL_MOVIE_TRAILER_URL1 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1);
+            trailerKey1 = mDetailCursor.getString(COL_MOVIE_TRAILER_URL1);
+            final String trailerUrl1 = "http://www.youtube.com/watch?v=" + trailerKey1;
+            thumbUrl1 = YOUTUBE_IMAGE_URL_PREFIX + trailerKey1 + YOUTUBE_IMAGE_URL_SUFFIX;
+            Picasso.with(getActivity()).load(thumbUrl1).into(mTrailerView1);
+
+            mTrailerView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl1)));
+
                 }
+            });
+
+            try {
+
+                COL_MOVIE_TRAILER_URL2 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2);
+                trailerKey2 = mDetailCursor.getString(COL_MOVIE_TRAILER_URL2);
+                final String trailerUrl2 = "http://www.youtube.com/watch?v=" + trailerKey2;
+                thumbUrl2 = YOUTUBE_IMAGE_URL_PREFIX + trailerKey2 + YOUTUBE_IMAGE_URL_SUFFIX;
+                Picasso.with(getActivity()).load(thumbUrl2).into(mTrailerView2);
+
+                COL_MOVIE_TRAILER_URL3 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3);
+                trailerKey3 = mDetailCursor.getString(COL_MOVIE_TRAILER_URL3);
+                final String trailerUrl3 = "http://www.youtube.com/watch?v=" + trailerKey3;
+                thumbUrl3 = YOUTUBE_IMAGE_URL_PREFIX + trailerKey3 + YOUTUBE_IMAGE_URL_SUFFIX;
+                Picasso.with(getActivity()).load(thumbUrl3).into(mTrailerView3);
+
+                COL_MOVIE_TRAILER_URL4 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4);
+                trailerKey4 = mDetailCursor.getString(COL_MOVIE_TRAILER_URL4);
+                final String trailerUrl4 = "http://www.youtube.com/watch?v=" + trailerKey4;
+                thumbUrl4 = YOUTUBE_IMAGE_URL_PREFIX + trailerKey4 + YOUTUBE_IMAGE_URL_SUFFIX;
+                Picasso.with(getActivity()).load(thumbUrl4).into(mTrailerView4);
+
+                mTrailerView2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl2)));
+
+                    }
+                });
+
+                mTrailerView3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl3)));
+
+                    }
+                });
+                mTrailerView4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl4)));
+
+                    }
+                });
+            }catch (Exception e)
+            {
+                Log.d(LOG_TAG, "Exception e = " + e);
             }
-        });
 
+//        Uri tUri = Uri.parse(trailerUrl);
+//        mTrailerView.setVideoURI(tUri);
+//        mTrailerView.setVisibility(View.VISIBLE);
+            final String favorites = mDetailCursor.getString(MoviesFragment.COL_MOVIE_FAVORITES);
+            if (favorites == null || favorites.equals("false")) {
+                mFavoritesButton.setText("Add to Favorites");
+            } else {
+                mFavoritesButton.setText("Remove From Favorites");
+            }
+            mFavoritesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int rows;
 
+                    ContentValues cv = new ContentValues();
+                    if (favorites == null || favorites.equals("false")) {
+                        cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "true");
+                        mFavoritesButton.setText("Remove From Favorites");
+                    } else {
+                        cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "false");
+                        mFavoritesButton.setText("Add to Favorites");
+                    }
+                    rows = getActivity().getContentResolver().update(MoviesContract.MoviesEntry.CONTENT_URI, cv, MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?", new String[]{id});
+                    Log.d(LOG_TAG, "rows update " + rows);
+//                onStatusChanged();
+                }
+            });
 
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
     }
 }
-
-//    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-//
-//    private String id, title, description, poster_url, popularity, rating, releaseDate, backdrop;
-//
-//    private ShareActionProvider mShareActionProvider;
-//    private String mMovie;
-//    private Uri mUri;
-//
-//    private static final int DETAIL_LOADER = 0;
-//    static final String DETAIL_URI = "URI";
-
-//
-//    private static final String[] DETAIL_COLUMNS = {
-//            MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID,
-//            MoviesContract.MoviesEntry.COLUMN_MOVIE_ID,
-//            MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE,
-//            MoviesContract.MoviesEntry.COLUMN_DESC,
-//            MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,
-//            MoviesContract.MoviesEntry.COLUMN_BACKDROP,
-//            MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
-//            MoviesContract.MoviesEntry.COLUMN_POPULARITY,
-//            MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE,
-//
-//    };
-//
-//    //Database Column Header Integers
-//    private static final int COL_MOVIE_ROW_ID = 0;
-//    private static final int COL_MOVIE_ID = 1;
-//    private static final int COL_MOVIE_TITLE = 2;
-//    private static final int COL_MOVIE__DESC = 3;
-//    private static final int COL_MOVIE_RELEASE_DATE = 4;
-//    private static final int COL_MOVIE_BACKDROP = 5;
-//    public static final int COL_MOVIE_POSTER_PATH = 6;
-//    public static final int COL_MOVIE_POPULARITY = 7;
-//    public static final int COL_MOVIE_VOTE_AVERAGE = 8;
-
-//    //member variable views in detail activity
-//    private ImageView mBackdrop;
-//    private ImageView mPoster;
-//    private TextView mTitle;
-//    private TextView mReleaseDate;
-//    private TextView mDescription;
-//    private TextView mId;
-//    private TextView mUserRating;
-//
-//
-//
-//    public DetailFragment() {
-//        setHasOptionsMenu(true);
-//    }
-//
-
-//
-////
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        inflater.inflate(R.menu.fragment_detail, menu);
-//
-//        // Retrieve the share menu item
-//        MenuItem menuItem = menu.findItem(R.id.action_share);
-//
-//        // Get the provider and hold onto it to set/change the share intent.
-////            ShareActionProvider mShareActionProvider =
-////                    (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-//        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-//
-//        // Attach an intent to this ShareActionProvider.  You can update this at any time,
-//        // like when the user selects a new piece of data they might like to share.
-//        //if (mShareActionProvider != null ) {
-//        if (mMovie != null) {
-//            mShareActionProvider.setShareIntent(createShareForecastIntent());
-////            } else {
-////                Log.d(LOG_TAG, "Share Action Provider is null?");
-//        }
-//    }
-//
-////    private Intent createShareForecastIntent() {
-////        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-////        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-////        shareIntent.setType("text/plain");
-////        shareIntent.putExtra(Intent.EXTRA_TEXT,
-////                mMovie + FORECAST_SHARE_HASHTAG);
-////        return shareIntent;
-////    }
-//
-
-//
-//
-
-//
-//
-
-
-//        Log.v(LOG_TAG, "In onLoadFinished");
-//        if (data != null && data.moveToFirst()) {
-//
-//
-//            // Read weather condition ID from cursor
-//            int movieId = data.getInt(COL_WEATHER_CONDITION_ID);
-//
-//            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(movieId));
-//
-//            // Read date from cursor and update views for day of week and date
-//            long date = data.getLong(COL_WEATHER_DATE);
-//            String friendlyDateText = Utility.getDayName(getActivity(), date);
-//            String dateText = Utility.getFormattedMonthDay(getActivity(), date);
-//            mFriendlyDateView.setText(friendlyDateText);
-//            mDateView.setText(dateText);
-//
-//            // Read description from cursor and update view
-//            String description = data.getString(COL_WEATHER_DESC);
-//            mDescriptionView.setText(description);
-//
-//            // Read high temperature from cursor and update view
-//            boolean isMetric = Utility.isMetric(getActivity());
-//
-//            double high = data.getDouble(COL_WEATHER_MAX_TEMP);
-//            String highString = Utility.formatTemperature(getActivity(), high, isMetric);
-//            mHighTempView.setText(highString);
-//
-//            // Read low temperature from cursor and update view
-//            double low = data.getDouble(COL_WEATHER_MIN_TEMP);
-//            String lowString = Utility.formatTemperature(getActivity(), low, isMetric);
-//            mLowTempView.setText(lowString);
-//
-//            // Read humidity from cursor and update view
-//            float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
-//            mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
-//
-//            // Read wind speed and direction from cursor and update view
-//            float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
-//            float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
-//            mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
-//
-//            // Read pressure from cursor and update view
-//            float pressure = data.getFloat(COL_WEATHER_PRESSURE);
-//            mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
-//
-//            // We still need this for the share intent
-//            mMovie = String.format("%s - %s - %s/%s", dateText, description, high, low);
-//
-//            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-//            if (mShareActionProvider != null) {
-//                mShareActionProvider.setShareIntent(createShareForecastIntent());
-//            }
-//        }

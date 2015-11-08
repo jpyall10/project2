@@ -25,11 +25,9 @@ public class MoviesAdapter extends CursorAdapter {
      */
     public static class ViewHolder {
         public final ImageView iconView;
-        //public final TextView ratingView;
 
         public ViewHolder(View view) {
             iconView = (ImageView) view.findViewById(R.id.grid_item_movie_imageview);
-            //ratingView = (TextView) view.findViewById(R.id.grid_item_movie_rating_textview);
         }
     }
 
@@ -38,8 +36,6 @@ public class MoviesAdapter extends CursorAdapter {
         Log.d(LOG_TAG, "MoviesAdapter constructor ran");
         mContext = context;
         sLoaderID = loaderID;
-        //int titleIndex = c.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE);
-        //Log.d(LOG_TAG, c.getString(titleIndex));
     }
 
     @Override
@@ -56,19 +52,12 @@ public class MoviesAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         ViewHolder viewHolder = (ViewHolder)view.getTag();
-        //while(cursor.moveToNext()) {
         int posterIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH);
         String poster_url = cursor.getString(posterIndex);
         Log.d(LOG_TAG, "poster_url = " + poster_url);
         Picasso.with(context).load(poster_url).into(viewHolder.iconView);
         Log.d(LOG_TAG, "bindView ran");
-        //    cursor.move(1);
-        //}
 
-//        if (movies != null && movies.size() > 0) {
-//            String poster_url = cursor.getString(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH);
-//            Picasso.with(mContext).load(poster_url).into(imageView);
-//        }
     }
 }
 

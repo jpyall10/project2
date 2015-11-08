@@ -19,12 +19,8 @@
         <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/detail_movie_backdrop"
             android:layout_width="fill_parent"
-
             android:layout_height="300dp"
-
-            android:scaleType="centerCrop"
-            android:src="@drawable/placeholder" />
-
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,9 +29,9 @@
             >
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/detail_movie_poster"
-                android:scaleType="centerCrop"
+                android:scaleType="center"
                 />
             <TextView
                 android:id="@+id/detail_movie_title"
@@ -44,7 +40,6 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingTop="20dp"
-                android:text="TITLE GOES HERE"
                 android:textColor="@color/orange"
                 android:textSize="40dp" />
 
@@ -57,9 +52,7 @@
             <Button
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/detail_favorites_button"
-                android:text="Add to Favorites"
-                android:onClick="favClickHandler"/>
+                android:id="@+id/detail_favorites_button" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +63,6 @@
                 android:id="@+id/detail_movie_release_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/detail_movie_title"
                 android:fontFamily="sans-serif-light"
                 android:paddingTop="2dp"
                 android:text="Release Date: "
@@ -85,7 +77,6 @@
                 android:fontFamily="sans-serif-condensed"
                 android:paddingLeft="10dp"
                 android:paddingTop="2dp"
-                android:text="RELEASE DATE GOES HERE"
                 android:textColor="@color/yellow"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -113,7 +104,6 @@
                 android:fontFamily="sans-serif-light"
                 android:paddingLeft="10dp"
                 android:paddingTop="20dp"
-                android:text="USER RATING GOES HERE"
                 android:textColor="@color/yellow"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -125,9 +115,68 @@
             android:layout_below="@id/detail_movie_rating"
             android:fontFamily="sans-serif-light"
             android:paddingTop="20dp"
-            android:text="DESCRIPTION GOES HERE : THis is some placeholder text to illustrate the description text of the movie that is a few lines long ................................blah blah blahblah blah blahblah blah blahblah blah blahblah blah blah"
             android:textColor="@color/yellow"
             android:textSize="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailers"
+                android:textColor="@color/lt_grey"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/detail_movie_trailerURL1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_trailerURL2"
+                    android:scaleType="center"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_trailerURL3"
+                    android:scaleType="center"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_trailerURL4"
+                    android:scaleType="center"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -153,7 +202,6 @@
                 android:fontFamily="sans-serif-light"
                 android:paddingLeft="10dp"
                 android:paddingTop="20dp"
-                android:text="ID GOES HERE"
                 android:textSize="10dp" />
         </LinearLayout>
 

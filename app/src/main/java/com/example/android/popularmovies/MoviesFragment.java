@@ -30,15 +30,18 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     private MoviesAdapter mMoviesAdapter;
 
-    //public Sorted sortStatus;
-
     private GridView mGridView;
     private int mPosition = GridView.INVALID_POSITION;
+    private String mSelection = null;
+    private String[] mSelectionArgs = null;
+    private boolean favBool = false;
 
     private static final String SELECTED_KEY = "selected_position";
     private final String LOG_TAG = this.getClass().getSimpleName();
 
     private static final int MOVIES_LOADER_ID = 0;
+
+    private String mSortOrder = MoviesContract.MoviesEntry.COLUMN_POPULARITY + " DESC";
 
     private static final String[] MOVIE_COLUMNS = {
             MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID,
@@ -77,15 +80,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-//        Cursor c =
-//                getActivity().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-//                        new String[]{MoviesContract.MoviesEntry._ID},
-//                        null,
-//                        null,
-//                        null);
-//        if (c.getCount() == 0){
-//            populateMovies();
-//        }
         populateMovies();
         getLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
@@ -112,26 +106,21 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
         mGridView.setAdapter(mMoviesAdapter);
 
-//        populateMovies();
-
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-//                if (cursor !=null) {
-                  int uriId = position+1;
-                  Uri uri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, uriId);
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor !=null)
+                {
+                    int id = cursor.getInt(MoviesFragment.COL_ID);
+                    Uri uri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, id);
 
-                    //Uri uri = MoviesContract.MoviesEntry.buildMoviesUri(uriId);
                     Log.d(LOG_TAG, "uri after click is " + uri);
-                    //((Callback) getActivity())
-                    //        .onItemSelected(uri);
-                DetailFragment detailFragment = DetailFragment.newInstance(uriId, uri);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_movies, detailFragment)
-                        .addToBackStack(null).commit();
+                    ((Callback) getActivity())
+                            .onItemSelected(uri);
+                    mPosition = position;
                 }
-            //}
+            }
         });
 
 //        if (savedInstanceState != null) {
@@ -174,6 +163,39 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        String s;
+        switch (id)
+        {
+            case R.id.action_sort_by_popularity_desc:
+                s = MoviesContract.MoviesEntry.COLUMN_POPULARITY + " DESC";
+                setSortOrder(s);
+                onStatusChanged();
+                break;
+            case R.id.action_sort_by_rating_desc:
+                s = MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE + " DESC";
+                setSortOrder(s);
+                onStatusChanged();
+                break;
+            case R.id.action_show_favorites:
+                //favBool = !favBool;
+                if(favBool)
+                {
+                    item.setTitle("Show Favorites");
+                    favBool = false;
+                }
+                else
+                {
+                    item.setTitle("Show All");
+                    favBool = true;
+                }
+                setFavorites();
+
+                onStatusChanged();
+                break;
+            default:
+                break;
+
+        }
 
 //        switch (id) {
 //            case R.id.action_sort_by_rating_desc:
@@ -206,7 +228,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     void onStatusChanged( ) {
-        populateMovies();
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
     }
 
@@ -220,16 +241,35 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         super.onSaveInstanceState(outState);
     }
 
+    public void setSortOrder(String sortOrder){
+        mSortOrder = sortOrder;
+    }
+
+    public void setFavorites()
+    {
+        if(favBool){
+            mSelection = MoviesContract.MoviesEntry.COLUMN_FAVORITES + " = ?";
+            mSelectionArgs = new String[] {"true"};
+        }
+        else
+        {
+//            mSelection = MoviesContract.MoviesEntry.COLUMN_FAVORITES + " = ?";
+//            mSelectionArgs = new String[]{"false"};
+            mSelection = null;
+            mSelectionArgs = null;
+        }
+        onStatusChanged();
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.d(LOG_TAG,"onCreateLoader ran");
-        //String sortOrder = MoviesContract.MoviesEntry.COLUMN_POPULARITY + " DESC";
         return new CursorLoader(getActivity(),
                 MoviesContract.MoviesEntry.CONTENT_URI,
                 MOVIE_COLUMNS,
-                null,
-                null,
-                null);
+                mSelection,
+                mSelectionArgs,
+                mSortOrder);
     }
 
     @Override

@@ -210,7 +210,11 @@ public class MoviesProvider extends ContentProvider {
                 rowsUpdated = db.update(MoviesContract.MoviesEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case MOVIE_WITH_ID:
-                rowsUpdated = db.update(MoviesContract.MoviesEntry.TABLE_NAME, values, selection, selectionArgs);
+                Log.d(LOG_TAG, "movie_with_id ran in update");
+                rowsUpdated = db.update(MoviesContract.MoviesEntry.TABLE_NAME, values,
+                        //selection, selectionArgs);
+                        MoviesContract.MoviesEntry._ID + " = ?",
+                        new String[]{String.valueOf(ContentUris.parseId(uri))});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

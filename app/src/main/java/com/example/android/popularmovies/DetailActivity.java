@@ -21,13 +21,15 @@ public class DetailActivity extends ActionBarActivity {
 
             Bundle arguments = new Bundle();
             arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+
             String uriFromIntent = getIntent().getData().toString();
             Log.d(LOG_TAG, "uri from intent is " + uriFromIntent);
+
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_movies, fragment)
+                    .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
     }

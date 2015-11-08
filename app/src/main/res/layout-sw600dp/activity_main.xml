@@ -15,15 +15,15 @@
     <fragment
         android:id="@+id/fragment_movies"
         android:name="com.example.android.popularmovies.MoviesFragment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         tools:context="com.example.android.popularmovies.MoviesFragment"
-        tools:layout="@layout/fragment_movies" />
+        />
 
     <FrameLayout
         android:id="@+id/movie_detail_container"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 

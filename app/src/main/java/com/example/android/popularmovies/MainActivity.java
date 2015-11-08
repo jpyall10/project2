@@ -36,10 +36,6 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
 //            }
         }
 
-            //        Stetho.initialize(
-//                Stetho.newInitializerBuilder(this).enableDumpapp(Stetho)
-//        )
-
     }
 
 
@@ -52,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -73,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
     @Override
     public void onItemSelected(Uri movieUri) {
         if (mTwoPane) {
+            Log.d(LOG_TAG, "two pane mode in onItemSelected");
+
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.

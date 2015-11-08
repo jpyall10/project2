@@ -43,7 +43,11 @@ public class MoviesContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";  //vote_average
         public static final String COLUMN_BACKDROP = "backdrop";        //backdrop_path
 
-        public static final String COLUMN_TRAILER_PATH = "trailerURL";  //trailer path
+        public static final String COLUMN_TRAILER_PATH1 = "trailerURL1";  //trailer path
+        public static final String COLUMN_TRAILER_PATH2 = "trailerURL2";  //trailer path
+        public static final String COLUMN_TRAILER_PATH3 = "trailerURL3";  //trailer path
+        public static final String COLUMN_TRAILER_PATH4 = "trailerURL4";  //trailer path
+
         public static final String COLUMN_REVIEWS = "reviews";          //reviews
 
         public static final Uri CONTENT_URI =

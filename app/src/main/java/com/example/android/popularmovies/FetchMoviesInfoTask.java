@@ -39,54 +39,6 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = FetchMoviesInfoTask.class.getSimpleName();
 
-//    long addMovie(String id, String title, String poster, String popularity, String description, String vote_average, String release, String backdrop) {
-//        // Students: First, check if the location with this city name exists in the db
-//        // If it exists, return the current ID
-//        // Otherwise, insert it using the content resolver and the base URI
-//
-//        long movieRowId;
-//
-//        Cursor movieCursor = mContext.getContentResolver().query(
-//                MoviesContract.MoviesEntry.CONTENT_URI,
-//                //new String[]{MoviesContract.MoviesEntry._ID},
-//                null,
-//                MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",
-//                new String[]{id},
-//                null);
-//
-//        if (movieCursor.moveToFirst()) {
-//            int movieRowIdIndex = movieCursor.getColumnIndex(MoviesContract.MoviesEntry._ID);
-//            movieRowId = movieCursor.getLong(movieRowIdIndex);
-//        } else {
-//            // Now that the content provider is set up, inserting rows of data is pretty simple.
-//            // First create a ContentValues object to hold the data you want to insert.
-//            ContentValues movieValues = new ContentValues();
-//
-//            // Then add the data, along with the corresponding name of the data type,
-//            // so the content provider knows what kind of value is being inserted.
-//            movieValues.put(MoviesContract.MoviesEntry._ID, movieRowId);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, id);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE, title);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, poster);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POPULARITY, popularity);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_DESC, description);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE, vote_average);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, release);
-//            movieValues.put(MoviesContract.MoviesEntry.COLUMN_BACKDROP, backdrop);
-//            // Finally, insert movie data into the database.
-//            Uri insertedUri = mContext.getContentResolver().insert(
-//                    MoviesContract.MoviesEntry.CONTENT_URI,
-//                    movieValues
-//            );
-//
-//            // The resulting URI contains the ID for the row.  Extract the movieId from the Uri.
-//            movieRowId = ContentUris.parseId(insertedUri);
-//        }
-//
-//        movieCursor.close();
-//        return movieRowId;
-//    }
-
     private void getMoviesInfoFromJson(String moviesJsonStr)
             throws JSONException {
 
@@ -148,23 +100,27 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
                 //String titleFromDb = movieCursor.getString(movieIdIndex);
                 //Log.d(LOG_TAG,"Movie Cursor " + movieCursor.toString());
 
+//                if(!movieCursor.moveToFirst())
+//                {
+
+                FetchMoviesExtraInfoTask fmeit = new FetchMoviesExtraInfoTask(mContext);
+                fmeit.execute(id);
+                ContentValues movieValues = new ContentValues();
+
+                //                movieValues.put(MoviesContract.MoviesEntry._ID, movieRowId);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, id);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE, title);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, poster);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_POPULARITY, popularity);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_DESC, description);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, release);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_BACKDROP, backdrop);
+                movieValues.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "false");
+
+                cVVector.add(movieValues);
                 if(!movieCursor.moveToFirst())
                 {
-                    ContentValues movieValues = new ContentValues();
-
-                    //                movieValues.put(MoviesContract.MoviesEntry._ID, movieRowId);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, id);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE, title);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, poster);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_POPULARITY, popularity);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_DESC, description);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE, vote_average);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, release);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_BACKDROP, backdrop);
-                    movieValues.put(MoviesContract.MoviesEntry.COLUMN_FAVORITES, "false");
-
-                    cVVector.add(movieValues);
-
                     Uri insertedUri = mContext.getContentResolver().insert(
                     MoviesContract.MoviesEntry.CONTENT_URI,
                     movieValues);
@@ -176,17 +132,20 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
                     movieCursor.close();
                 }
                 else{
-                    Log.d(LOG_TAG, "Movie already exists");
+                    int rowsUpdated = mContext.getContentResolver().update(MoviesContract.MoviesEntry.CONTENT_URI, movieValues, MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?", new String[]{id});
+                    Log.d(LOG_TAG, "Movie already exists: updated " + rowsUpdated + " rows");
+                    movieCursor.close();
+
                 }
             }
             int inserted = 0;
             // add to database
-            if ( cVVector.size() > 0 ) {
-                // Student: call bulkInsert to add the weatherEntries to the database here
-                ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                cVVector.toArray(cvArray);
-                inserted = mContext.getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
-            }
+//            if ( cVVector.size() > 0 ) {
+//                // Student: call bulkInsert to add the weatherEntries to the database here
+//                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+//                cVVector.toArray(cvArray);
+//                inserted = mContext.getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
+//            }
 
             Log.d(LOG_TAG, "FetchMoviesInfoTask Complete. " + inserted + " Inserted");
 
@@ -208,9 +167,11 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
 
         // Will contain the raw JSON response as a string.
         String moviesJsonStr = null;
+        String videosAndReviewsJsonStr = null;
 
-        String apiKey = "put api key here";
+        String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
         String sortBy = "popularity.desc";
+        Cursor cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI, new String[]{MoviesContract.MoviesEntry.COLUMN_MOVIE_ID},null,null,null);
 
         try {
             // Construct the URL for the query
