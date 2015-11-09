@@ -22,8 +22,6 @@ public class MoviesContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_MOVIES = "movies";
-    public static final String PATH_VIDEOS = "videos";
-    public static final String PATH_REVIEWS = "reviews";
     //public static final String PATH_ID = "id";
 
     public static final class MoviesEntry implements BaseColumns {
@@ -48,7 +46,21 @@ public class MoviesContract {
         public static final String COLUMN_TRAILER_PATH3 = "trailerURL3";  //trailer path
         public static final String COLUMN_TRAILER_PATH4 = "trailerURL4";  //trailer path
 
-        public static final String COLUMN_REVIEWS = "reviews";          //reviews
+        public static final String COLUMN_REVIEW1 = "review1";  //review path
+        public static final String COLUMN_REVIEW_AUTHOR1 = "review_author1";  //review path
+
+        public static final String COLUMN_REVIEW2 = "review2";  //review path
+        public static final String COLUMN_REVIEW_AUTHOR2 = "review_author2";  //review path
+
+        public static final String COLUMN_REVIEW3 = "review3";  //review path
+        public static final String COLUMN_REVIEW_AUTHOR3 = "review_author3";  //review path
+
+        public static final String COLUMN_REVIEW4 = "review4";  //review path
+        public static final String COLUMN_REVIEW_AUTHOR4 = "review_author4";  //review path
+
+
+
+
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();

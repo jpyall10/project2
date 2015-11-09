@@ -41,6 +41,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mUserRating;
     private Button mFavoritesButton;
     private ImageView mTrailerView1, mTrailerView2, mTrailerView3, mTrailerView4;
+    private TextView mReviewAuthor1, mReviewAuthor2, mReviewAuthor3, mReviewAuthor4;
+    private TextView mReviewContent1, mReviewContent2, mReviewContent3, mReviewContent4;
+
 
     private static final String YOUTUBE_IMAGE_URL_PREFIX = "http://img.youtube.com/vi/";
     private static final String YOUTUBE_IMAGE_URL_SUFFIX = "/0.jpg";
@@ -61,7 +64,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1,
             MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2,
             MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3,
-            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4
+            MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR1,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW1,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR2,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW2,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR3,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW3,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR4,
+            MoviesContract.MoviesEntry.COLUMN_REVIEW4
     };
 
     public static DetailFragment newInstance(int position, Uri uri) {
@@ -112,6 +123,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mTrailerView3 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL3);
         mTrailerView4 = (ImageView) rootView.findViewById(R.id.detail_movie_trailerURL4);
 
+        mReviewAuthor1 = (TextView) rootView.findViewById(R.id.detail_movie_review_author1);
+        mReviewContent1 = (TextView) rootView.findViewById(R.id.detail_movie_review_content1);
+
+        mReviewAuthor2 = (TextView) rootView.findViewById(R.id.detail_movie_review_author2);
+        mReviewContent2 = (TextView) rootView.findViewById(R.id.detail_movie_review_content2);
+
+        mReviewAuthor3 = (TextView) rootView.findViewById(R.id.detail_movie_review_author3);
+        mReviewContent3 = (TextView) rootView.findViewById(R.id.detail_movie_review_content3);
+
+        mReviewAuthor4 = (TextView) rootView.findViewById(R.id.detail_movie_review_author4);
+        mReviewContent4 = (TextView) rootView.findViewById(R.id.detail_movie_review_content4);
 
         Bundle args = this.getArguments();
         getLoaderManager().initLoader(DETAILS_LOADER_ID, args, DetailFragment.this);
@@ -176,6 +198,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String trailerKey1, trailerKey2, trailerKey3, trailerKey4, thumbUrl1, thumbUrl2, thumbUrl3, thumbUrl4;
             int COL_MOVIE_TRAILER_URL1, COL_MOVIE_TRAILER_URL2, COL_MOVIE_TRAILER_URL3, COL_MOVIE_TRAILER_URL4;
+            int COL_MOVIE_REVIEW_AUTHOR1, COL_MOVIE_REVIEW_AUTHOR2, COL_MOVIE_REVIEW_AUTHOR3, COL_MOVIE_REVIEW_AUTHOR4;
+            String reviewAuthor1, reviewAuthor2, reviewAuthor3, reviewAuthor4;
+            int COL_MOVIE_REVIEW_CONTENT1, COL_MOVIE_REVIEW_CONTENT2, COL_MOVIE_REVIEW_CONTENT3, COL_MOVIE_REVIEW_CONTENT4;
+            String reviewContent1, reviewContent2, reviewContent3, reviewContent4;
+
             mDetailCursor = data;
             mDetailCursor.moveToFirst();
             DatabaseUtils.dumpCursor(data);
@@ -213,6 +240,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                 }
             });
+
+            COL_MOVIE_REVIEW_AUTHOR1 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR1);
+            reviewAuthor1 = mDetailCursor.getString(COL_MOVIE_REVIEW_AUTHOR1);
+            mReviewAuthor1.setText(reviewAuthor1);
+            COL_MOVIE_REVIEW_CONTENT1 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW1);
+            reviewContent1 = mDetailCursor.getString(COL_MOVIE_REVIEW_CONTENT1);
+            mReviewContent1.setText(reviewContent1);
 
             try {
 
@@ -256,6 +290,28 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                     }
                 });
+
+                COL_MOVIE_REVIEW_AUTHOR2 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR2);
+                reviewAuthor2 = mDetailCursor.getString(COL_MOVIE_REVIEW_AUTHOR2);
+                mReviewAuthor2.setText(reviewAuthor2);
+                COL_MOVIE_REVIEW_CONTENT2 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW2);
+                reviewContent2 = mDetailCursor.getString(COL_MOVIE_REVIEW_CONTENT2);
+                mReviewContent2.setText(reviewContent2);
+
+                COL_MOVIE_REVIEW_AUTHOR3 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR3);
+                reviewAuthor3 = mDetailCursor.getString(COL_MOVIE_REVIEW_AUTHOR3);
+                mReviewAuthor3.setText(reviewAuthor3);
+                COL_MOVIE_REVIEW_CONTENT3 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW3);
+                reviewContent3 = mDetailCursor.getString(COL_MOVIE_REVIEW_CONTENT3);
+                mReviewContent3.setText(reviewContent3);
+
+                COL_MOVIE_REVIEW_AUTHOR4 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR4);
+                reviewAuthor4 = mDetailCursor.getString(COL_MOVIE_REVIEW_AUTHOR4);
+                mReviewAuthor4.setText(reviewAuthor4);
+                COL_MOVIE_REVIEW_CONTENT4 = mDetailCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_REVIEW4);
+                reviewContent4 = mDetailCursor.getString(COL_MOVIE_REVIEW_CONTENT4);
+                mReviewContent4.setText(reviewContent4);
+
             }catch (Exception e)
             {
                 Log.d(LOG_TAG, "Exception e = " + e);

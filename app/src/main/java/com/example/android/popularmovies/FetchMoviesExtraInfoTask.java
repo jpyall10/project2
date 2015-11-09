@@ -45,22 +45,23 @@ public class FetchMoviesExtraInfoTask extends AsyncTask<String, Void, Void> {
         final String TMDB_VIDEOS="videos";
         final String TMDB_REVIEWS="reviews";
         final String TMDB_KEY="key";
-        final String TMDB_NAME="name";
-        final String TMDB_SITE="site";
-        final String TMDB_SIZE="size";
-        final String TMDB_TYPE="type";
+        final String TMDB_AUTHOR = "author";
+        final String TMDB_CONTENT = "content";
+//        final String TMDB_NAME="name";
+//        final String TMDB_SITE="site";
+//        final String TMDB_SIZE="size";
+//        final String TMDB_TYPE="type";
 
 
         try {
 
             JSONObject videosAndReviewsJson = new JSONObject(videosAndReviewsJsonString);
 
-
             JSONObject videosJson = videosAndReviewsJson.getJSONObject(TMDB_VIDEOS);
             JSONArray videosArray = videosJson.getJSONArray(TMDB_RESULTS);
 
-//            JSONObject reviewsJson = videosAndReviewsJson.getJSONObject(TMDB_REVIEWS);
-//            JSONArray reviewsArray = reviewsJson.getJSONArray(TMDB_RESULTS);
+            JSONObject reviewsJson = videosAndReviewsJson.getJSONObject(TMDB_REVIEWS);
+            JSONArray reviewsArray = reviewsJson.getJSONArray(TMDB_RESULTS);
 
             //Vector<ContentValues> cVVector = new Vector<ContentValues>(videosArray.length());
 
@@ -68,122 +69,113 @@ public class FetchMoviesExtraInfoTask extends AsyncTask<String, Void, Void> {
 
 //            String[] reviews;
             String[] trailerKey = new String[videosArray.length()];
+            String[] reviewAuthor = new String[reviewsArray.length()];
+            String[] reviewContent = new String[reviewsArray.length()];
 
 
 //            for (int i = 0; i < videosArray.length(); i++) {
             int i = 0;
-                while(i < 5) {
-                    //Strings to pull from JSON
-                    String videoId, key, name, site, size, type, movieId;
-                    //String[] video_urls = new String[videosArray.length()];
+            while (i < 5) {
+                //Strings to pull from JSON
+                String videoId, key, name, site, size, type, movieId;
+                String author, content;
 
-                    // Get the JSON object representing the movie
-                    JSONObject videoInfo = videosArray.getJSONObject(i);
-
-
-                    //Define the Strings
-                    movieId = videosAndReviewsJson.getString(TMDB_ID);
-                    videoId = videoInfo.getString(TMDB_ID);
-                    key = videoInfo.getString(TMDB_KEY);
-                    name = videoInfo.getString(TMDB_NAME);
-                    site = videoInfo.getString(TMDB_SITE);
-                    size = videoInfo.getString(TMDB_SIZE);
-                    type = videoInfo.getString(TMDB_TYPE);
-
-                    //"http://www.youtube.com/watch?v="+
-
-                    long movieRowId;
-
-                    Cursor movieCursor = mContext.getContentResolver().query(
-                            MoviesContract.MoviesEntry.CONTENT_URI,
-                            new String[]{MoviesContract.MoviesEntry._ID},
-                            MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",
-                            new String[]{movieId},
-                            null);
-
-                    trailerKey[i] = key;
-                    ContentValues videoValues = new ContentValues();
-
-                    if (trailerKey[i] == null) {
-                        Log.d(LOG_TAG, "There is no key for the " + i + "th video element");
-                    } else {
-
-                        switch (i) {
-                            case 0:
-                                videoValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1, trailerKey[i]);
-                                Log.d(LOG_TAG, "i = " + i);
-                                break;
-                            case 1:
-                                videoValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2, trailerKey[i]);
-                                Log.d(LOG_TAG, "i = " + i);
-                                break;
-                            case 2:
-                                videoValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3, trailerKey[i]);
-                                Log.d(LOG_TAG, "i = " + i);
-                                break;
-                            case 3:
-                                videoValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4, trailerKey[i]);
-                                Log.d(LOG_TAG, "i = " + i);
-                                break;
-                            default:
-                                Log.d(LOG_TAG, "i = " + i);
-                                Log.d(LOG_TAG, "Only storing 3 videos");
-                                break;
-
-                        }
-                        movieCursor.moveToFirst();
-                        int index = movieCursor.getColumnIndex(MoviesContract.MoviesEntry._ID);
-                        Log.d(LOG_TAG, "index = " + index + " and string = ");
-                        movieRowId = movieCursor.getLong(index);
-
-                        try {
-                            Uri uri = MoviesContract.MoviesEntry.buildMoviesUri(movieRowId);
-                            int updatedRows = mContext.getContentResolver().update(uri,
-                                    videoValues,
-                                    null,
-                                    null);
-                            //                        MoviesContract.MoviesEntry._ID + " = ?",
-                            //                          new String[]{String.valueOf(ContentUris.parseId(uri))});
-                            Log.d(LOG_TAG, "selection args = " + String.valueOf(ContentUris.parseId(uri)));
-                            Log.v(LOG_TAG, "Updated Movie (id = " + movieRowId + " with trailerURL = " + videoValues.get(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1) + " updated rows: " + updatedRows);
-
-                        }
-                        catch (Exception e)
-                        {
-                            Log.d(LOG_TAG, "There was an exception " + e);
-                        }
+                // Get the JSON object representing the movie
+                JSONObject videoInfo = videosArray.getJSONObject(i);
+                JSONObject reviewInfo = reviewsArray.getJSONObject(i);
 
 
-                        movieCursor.close();
+                //Define the Strings
+                movieId = videosAndReviewsJson.getString(TMDB_ID);
+                //videoId = videoInfo.getString(TMDB_ID);
+                key = videoInfo.getString(TMDB_KEY);
+                author = reviewInfo.getString(TMDB_AUTHOR);
+                content = reviewInfo.getString(TMDB_CONTENT);
+//                    name = videoInfo.getString(TMDB_NAME);
+//                    site = videoInfo.getString(TMDB_SITE);
+//                    size = videoInfo.getString(TMDB_SIZE);
+//                    type = videoInfo.getString(TMDB_TYPE);
+
+                //"http://www.youtube.com/watch?v="+
+
+                long movieRowId;
+
+                Cursor movieCursor = mContext.getContentResolver().query(
+                        MoviesContract.MoviesEntry.CONTENT_URI,
+                        new String[]{MoviesContract.MoviesEntry._ID},
+                        MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{movieId},
+                        null);
+
+                trailerKey[i] = key;
+                reviewAuthor[i] = author;
+                reviewContent[i] = content;
+                ContentValues videoAndReviewValues = new ContentValues();
+
+                if (trailerKey[i] == null) {
+                    Log.d(LOG_TAG, "There is no key for the " + i + "th video element");
+                } else {
+
+                    switch (i) {
+                        case 0:
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1, trailerKey[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR1, reviewAuthor[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW1, reviewContent[i]);
+                            Log.d(LOG_TAG, "i = " + i);
+                            break;
+                        case 1:
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2, trailerKey[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR2, reviewAuthor[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW2, reviewContent[i]);
+                            Log.d(LOG_TAG, "i = " + i);
+                            break;
+                        case 2:
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3, trailerKey[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR3, reviewAuthor[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW3, reviewContent[i]);
+                            Log.d(LOG_TAG, "i = " + i);
+                            break;
+                        case 3:
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4, trailerKey[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR4, reviewAuthor[i]);
+                            videoAndReviewValues.put(MoviesContract.MoviesEntry.COLUMN_REVIEW4, reviewContent[i]);
+                            Log.d(LOG_TAG, "i = " + i);
+                            break;
+                        default:
+                            Log.d(LOG_TAG, "i = " + i);
+                            Log.d(LOG_TAG, "Only storing 3 videos");
+                            break;
+
                     }
-                    i++;
+                    movieCursor.moveToFirst();
+                    int index = movieCursor.getColumnIndex(MoviesContract.MoviesEntry._ID);
+                    Log.d(LOG_TAG, "index = " + index + " and string = ");
+                    movieRowId = movieCursor.getLong(index);
+
+                    try {
+                        Uri uri = MoviesContract.MoviesEntry.buildMoviesUri(movieRowId);
+                        int updatedRows = mContext.getContentResolver().update(uri,
+                                videoAndReviewValues,
+                                null,
+                                null);
+                        //                        MoviesContract.MoviesEntry._ID + " = ?",
+                        //                          new String[]{String.valueOf(ContentUris.parseId(uri))});
+                        Log.d(LOG_TAG, "selection args = " + String.valueOf(ContentUris.parseId(uri)));
+                        Log.v(LOG_TAG, "Updated Movie (id = " + movieRowId + " with trailerURL = " + videoAndReviewValues.get(MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH1) + " updated rows: " + updatedRows);
+
+                    } catch (Exception e) {
+                        Log.d(LOG_TAG, "There was an exception " + e);
+                    }
+
+
+                    movieCursor.close();
                 }
-//            }
-//                }
-//                else{
-//                    //int rowsUpdated = mContext.getContentResolver().update(MoviesContract.MoviesEntry.CONTENT_URI, videoValues,null, null);
-//                    Log.d(LOG_TAG, "Movie doesn't exist");
-//
-//                }
-                //}
-//            int updated = 0;
-//            // add to database
-//            if ( cVVector.size() > 0 ) {
-//                // Student: call bulkInsert to add the weatherEntries to the database here
-//                ContentValues[] cvArray = new ContentValues[cVVector.size()];
-//                cVVector.toArray(cvArray);
-//                updated = mContext.getContentResolver().update(MoviesContract.MoviesEntry.CONTENT_URI, cvArray,null,null );
-
-//            Log.d(LOG_TAG, "Videos Part Complete. " + updated + " Updated");
-
-
-        } catch (JSONException e) {
+                i++;
+            }
+        }catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-//
-//
-//
     }
 
     @Override
@@ -199,7 +191,8 @@ public class FetchMoviesExtraInfoTask extends AsyncTask<String, Void, Void> {
         String movieId = params[0];
 
         String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
-        String append = "videos, reviews";
+        String append1 = "videos,reviews";
+        //String append2 = "reviews";
         //Cursor cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI, new String[]{MoviesContract.MoviesEntry.COLUMN_MOVIE_ID},null,null,null);
 
         try {
@@ -212,7 +205,7 @@ public class FetchMoviesExtraInfoTask extends AsyncTask<String, Void, Void> {
             Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                     .appendPath(movieId)
                     .appendQueryParameter(API_KEY_PARAM, apiKey)
-                    .appendQueryParameter(APPEND_PARAM, append)
+                    .appendQueryParameter(APPEND_PARAM, append1)
                     .build();
 
             URL url = new URL(builtUri.toString());

@@ -275,11 +275,11 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mMoviesAdapter.swapCursor(data);
-        if (mPosition != GridView.INVALID_POSITION) {
-            // If we don't need to restart the loader, and there's a desired position to restore
-            // to, do so now.
-            mGridView.smoothScrollToPosition(mPosition);
-        }
+//        if (mPosition != GridView.INVALID_POSITION) {
+//            // If we don't need to restart the loader, and there's a desired position to restore
+//            // to, do so now.
+//            mGridView.smoothScrollToPosition(mPosition);
+//        }
     }
 
     @Override

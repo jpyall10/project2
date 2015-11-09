@@ -12,7 +12,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = MoviesDbHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     static final String DATABASE_NAME = "movies.db";
 
@@ -39,7 +39,14 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH2 + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH3 + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_TRAILER_PATH4 + " TEXT, " +
-                MoviesContract.MoviesEntry.COLUMN_REVIEWS + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR1 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW1 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR2 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW2 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR3 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW3 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW_AUTHOR4 + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_REVIEW4 + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_FAVORITES + " TEXT " +
 
                 ");";
