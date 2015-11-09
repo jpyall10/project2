@@ -43,6 +43,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ImageView mTrailerView1, mTrailerView2, mTrailerView3, mTrailerView4;
     private TextView mReviewAuthor1, mReviewAuthor2, mReviewAuthor3, mReviewAuthor4;
     private TextView mReviewContent1, mReviewContent2, mReviewContent3, mReviewContent4;
+    private TextView mReleaseDateLabel, mRatingLabel, mTrailersLabel, mReviewsLabel, mIdLabel;
 
 
     private static final String YOUTUBE_IMAGE_URL_PREFIX = "http://img.youtube.com/vi/";
@@ -135,6 +136,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mReviewAuthor4 = (TextView) rootView.findViewById(R.id.detail_movie_review_author4);
         mReviewContent4 = (TextView) rootView.findViewById(R.id.detail_movie_review_content4);
 
+        mReleaseDateLabel = (TextView) rootView.findViewById(R.id.detail_movie_release_label);
+        mRatingLabel = (TextView) rootView.findViewById(R.id.detail_movie_rating_label);
+        mTrailersLabel = (TextView) rootView.findViewById(R.id.detail_movie_trailers_label);
+        mReviewsLabel = (TextView) rootView.findViewById(R.id.detail_movie_reviews_label);
+        mIdLabel = (TextView) rootView.findViewById(R.id.detail_movie_id_label);
+
         Bundle args = this.getArguments();
         getLoaderManager().initLoader(DETAILS_LOADER_ID, args, DetailFragment.this);
 
@@ -220,6 +227,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             //Log.d(LOG_TAG, "trailerKey = " + thumbUrl);
 
+            //Set Labels and button visible
+            mFavoritesButton.setVisibility(View.VISIBLE);
+            mReleaseDateLabel.setVisibility(View.VISIBLE);
+            mRatingLabel.setVisibility(View.VISIBLE);
+            mTrailersLabel.setVisibility(View.VISIBLE);
+            mReviewsLabel.setVisibility(View.VISIBLE);
+            mIdLabel.setVisibility(View.VISIBLE);
 
             mTitle.setText(title);
             mReleaseDate.setText(release);

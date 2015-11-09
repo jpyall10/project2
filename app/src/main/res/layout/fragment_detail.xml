@@ -26,6 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             >
             <ImageView
                 android:layout_width="wrap_content"
@@ -50,13 +52,18 @@
         <Button
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/detail_favorites_button" />
+            android:id="@+id/detail_favorites_button"
+            android:visibility="invisible"
+            android:layout_marginLeft="5dp"
+            />
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <TextView
                 android:id="@+id/detail_movie_release_label"
                 android:layout_width="wrap_content"
@@ -66,7 +73,8 @@
                 android:text="Release Date: "
                 android:textColor="@color/lt_grey"
                 android:textSize="16dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/detail_movie_release"
@@ -82,7 +90,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <TextView
                 android:id="@+id/detail_movie_rating_label"
                 android:layout_width="wrap_content"
@@ -92,7 +102,8 @@
                 android:text="User Rating: "
                 android:textColor="@color/lt_grey"
                 android:textSize="16dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/detail_movie_rating"
@@ -114,28 +125,36 @@
             android:fontFamily="sans-serif-light"
             android:paddingTop="20dp"
             android:textColor="@color/yellow"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/detail_movie_trailers_label"
             android:text="Trailers"
             android:textColor="@color/orange"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:visibility="invisible"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <ImageView
                 android:id="@+id/detail_movie_trailerURL1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center"/>
             <ImageView
                 android:layout_width="match_parent"
@@ -143,22 +162,24 @@
                 android:id="@+id/detail_movie_trailerURL2"
                 android:scaleType="center"
                 android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/detail_movie_trailerURL3"
                 android:scaleType="center"
                 android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center"/>
             <ImageView
                 android:layout_width="match_parent"
@@ -166,8 +187,8 @@
                 android:id="@+id/detail_movie_trailerURL4"
                 android:scaleType="center"
                 android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center"/>
         </LinearLayout>
 
@@ -175,16 +196,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/orange"
+            android:id="@+id/detail_movie_reviews_label"
             android:text="Reviews"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:visibility="invisible"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_movie_review_author1"
-            android:textColor="@color/lt_grey"
+            android:textColor="@color/yellow"
             android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold|italic"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -193,15 +220,19 @@
             android:paddingBottom="10dp"
             android:textColor="@color/lt_grey"
             android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_movie_review_author2"
-            android:textStyle="bold"
-            android:textColor="@color/lt_grey"
+            android:textStyle="bold|italic"
+            android:textColor="@color/yellow"
             android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             />
 
         <TextView
@@ -211,6 +242,8 @@
             android:paddingBottom="10dp"
             android:textColor="@color/lt_grey"
             android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             />
 
 
@@ -218,9 +251,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_movie_review_author3"
-            android:textStyle="bold"
-            android:textColor="@color/lt_grey"
+            android:textStyle="bold|italic"
+            android:textColor="@color/yellow"
             android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             />
 
         <TextView
@@ -230,6 +265,8 @@
             android:paddingBottom="10dp"
             android:textColor="@color/lt_grey"
             android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
 
             />
 
@@ -238,16 +275,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_movie_review_author4"
-            android:textStyle="bold"
-            android:textColor="@color/lt_grey"
-            android:textSize="16dp"/>
+            android:textStyle="bold|italic"
+            android:textColor="@color/yellow"
+            android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/detail_movie_review_content4"
             android:paddingBottom="10dp"
             android:textColor="@color/lt_grey"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -261,7 +302,8 @@
                 android:fontFamily="sans-serif-light"
                 android:paddingTop="20dp"
                 android:text="ID"
-                android:textSize="10dp" />
+                android:textSize="10dp"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/detail_movie_id"

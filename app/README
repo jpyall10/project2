@@ -1,1 +1,2 @@
-Please assign your api key in the String apiKey inside of the doInBackground() method in the FetchMoviesInfoTask.java file
+Please assign your api key in the String apiKey inside of the doInBackground() method in the
+FetchMoviesInfoTask.java and FetchMoviesExtraInfoTask.java files

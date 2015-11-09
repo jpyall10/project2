@@ -169,7 +169,7 @@ public class FetchMoviesInfoTask extends AsyncTask<String, Void, Void> {
         String moviesJsonStr = null;
         String videosAndReviewsJsonStr = null;
 
-        String apiKey = "42b1e5baac9dc17b1df2bc072e1c01ca";
+        String apiKey = "put API key here";
         String sortBy = "popularity.desc";
         Cursor cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI, new String[]{MoviesContract.MoviesEntry.COLUMN_MOVIE_ID},null,null,null);
 
